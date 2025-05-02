@@ -1,0 +1,11 @@
+{
+	"id": "highlight-on-copy",
+	"name": "Highlight On Copy",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Highlight selected text when copying it.",
+	"author": "Trevor Tyler Lee",
+	"authorUrl": "https://trevortylerlee.com",
+	"fundingUrl": "https://donate.stripe.com/aEU6ow7VEf7u7sseUU",
+	"isDesktopOnly": false
+}
