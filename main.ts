@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS: HighlightOnCopySettings = {
 
 export default class HighlightOnCopyPlugin extends Plugin {
 	settings: HighlightOnCopySettings;
+	private highlightTimeout: number | null = null;
 
 	async onload() {
 		await this.loadSettings();
@@ -94,10 +95,15 @@ export default class HighlightOnCopyPlugin extends Plugin {
 			`${this.settings.duration}ms`
 		);
 
+		if (this.highlightTimeout !== null) {
+			window.clearTimeout(this.highlightTimeout);
+		}
+
 		document.documentElement.classList.add("copy-highlight-active");
 
-		window.setTimeout(() => {
+		this.highlightTimeout = window.setTimeout(() => {
 			document.documentElement.classList.remove("copy-highlight-active");
+			this.highlightTimeout = null;
 		}, this.settings.duration);
 
 		if (view.getMode() === "source") {
