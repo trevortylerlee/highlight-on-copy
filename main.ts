@@ -41,6 +41,7 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		:root {
 		  --hbg: transparent;
 		  --hfg: inherit;
+		  --hdur: 100ms;
 		}
   
 		.copy-highlight-active .cm-content ::selection,
@@ -48,8 +49,8 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		  background-color: var(--hbg) !important;
 		  color:            var(--hfg) !important;
 		  transition:
-			background-color ${this.settings.duration}ms ease-out,
-			color            ${this.settings.duration}ms ease-out;
+			background-color var(--hdur) ease-out,
+			color            var(--hdur) ease-out;
 		}
   
 		.cm-editor .highlight-on-copy,
@@ -57,8 +58,8 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		  background-color: var(--hbg) !important;
 		  color:            var(--hfg) !important;
 		  transition:
-			background-color ${this.settings.duration}ms ease-out,
-			color            ${this.settings.duration}ms ease-out;
+			background-color var(--hdur) ease-out,
+			color            var(--hdur) ease-out;
 		}
 	  `;
 		document.head.appendChild(style);
@@ -87,6 +88,10 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		document.documentElement.style.setProperty(
 			"--hfg",
 			this.settings.foregroundColor || "inherit"
+		);
+		document.documentElement.style.setProperty(
+			"--hdur",
+			`${this.settings.duration}ms`
 		);
 
 		document.documentElement.classList.add("copy-highlight-active");
