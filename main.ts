@@ -70,7 +70,7 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,
-			await this.loadData()
+			await this.loadData(),
 		);
 	}
 
@@ -84,15 +84,15 @@ export default class HighlightOnCopyPlugin extends Plugin {
 
 		document.documentElement.style.setProperty(
 			"--hbg",
-			this.settings.backgroundColor
+			this.settings.backgroundColor,
 		);
 		document.documentElement.style.setProperty(
 			"--hfg",
-			this.settings.foregroundColor || "inherit"
+			this.settings.foregroundColor || "inherit",
 		);
 		document.documentElement.style.setProperty(
 			"--hdur",
-			`${this.settings.duration}ms`
+			`${this.settings.duration}ms`,
 		);
 
 		if (this.highlightTimeout !== null) {
@@ -159,8 +159,8 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 		containerEl.createEl("h2", { text: "Highlight on Copy Settings" });
 
 		new Setting(containerEl)
-			.setName("Background Color")
-			.setDesc("CSS color for the highlight background")
+			.setName("Background color")
+			.setDesc("CSS color for the highlight background.")
 			.addText((t) =>
 				t
 					.setPlaceholder(DEFAULT_SETTINGS.backgroundColor)
@@ -169,12 +169,14 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 						this.plugin.settings.backgroundColor =
 							v || DEFAULT_SETTINGS.backgroundColor;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 
 		new Setting(containerEl)
-			.setName("Foreground Color")
-			.setDesc("Optional CSS color for the text (leave blank to inherit)")
+			.setName("Foreground color")
+			.setDesc(
+				"Optional CSS color for the text (leave blank to inherit).",
+			)
 			.addText((t) =>
 				t
 					.setPlaceholder("inherit")
@@ -182,12 +184,12 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 					.onChange(async (v) => {
 						this.plugin.settings.foregroundColor = v;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 
 		new Setting(containerEl)
-			.setName("Animation Duration (ms)")
-			.setDesc("How long the highlight lasts before fading out")
+			.setName("Animation duration (ms)")
+			.setDesc("How long the highlight lasts before fading out.")
 			.addText((t) =>
 				t
 					.setPlaceholder(String(DEFAULT_SETTINGS.duration))
@@ -198,7 +200,7 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 							? DEFAULT_SETTINGS.duration
 							: Math.max(0, n);
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 	}
 }
