@@ -155,8 +155,6 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
-		containerEl.empty();
-		containerEl.createEl("h2", { text: "Highlight on Copy Settings" });
 
 		new Setting(containerEl)
 			.setName("Background color")
