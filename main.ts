@@ -196,7 +196,7 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 						const n = parseInt(v);
 						this.plugin.settings.duration = isNaN(n)
 							? DEFAULT_SETTINGS.duration
-							: n;
+							: Math.max(0, n);
 						await this.plugin.saveSettings();
 					})
 			);
