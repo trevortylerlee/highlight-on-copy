@@ -43,7 +43,8 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		  --hfg: inherit;
 		}
   
-		.copy-highlight-active .cm-content ::selection {
+		.copy-highlight-active .cm-content ::selection,
+		.copy-highlight-active .markdown-preview-view ::selection {
 		  background-color: var(--hbg) !important;
 		  color:            var(--hfg) !important;
 		  transition:
@@ -52,8 +53,7 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		}
   
 		.cm-editor .highlight-on-copy,
-		.cm-selectionBackground.highlight-on-copy,
-		.markdown-preview-view .highlight-on-copy {
+		.cm-selectionBackground.highlight-on-copy {
 		  background-color: var(--hbg) !important;
 		  color:            var(--hfg) !important;
 		  transition:
@@ -100,62 +100,6 @@ export default class HighlightOnCopyPlugin extends Plugin {
 			if (!this.isCM6(editor)) {
 				this.handleCM5Highlight(editor);
 			}
-			return;
-		}
-
-		const sel = window.getSelection();
-		if (!sel || sel.isCollapsed) return;
-		const range = sel.getRangeAt(0);
-
-		const startContainer = range.startContainer;
-		const startOffset = range.startOffset;
-		const endContainer = range.endContainer;
-		const endOffset = range.endOffset;
-
-		try {
-			const span = document.createElement("span");
-			span.className = "highlight-on-copy";
-			span.style.backgroundColor = this.settings.backgroundColor;
-			if (this.settings.foregroundColor) {
-				span.style.color = this.settings.foregroundColor;
-			}
-			span.style.transition = `background-color ${this.settings.duration}ms ease-out, color ${this.settings.duration}ms ease-out`;
-
-			range.surroundContents(span);
-
-			window.setTimeout(() => {
-				if (!span.parentNode) return;
-
-				const newRange = document.createRange();
-				const parent = span.parentNode;
-
-				while (span.firstChild) {
-					parent.insertBefore(span.firstChild, span);
-				}
-
-				parent.removeChild(span);
-
-				try {
-					newRange.setStart(startContainer, startOffset);
-					newRange.setEnd(endContainer, endOffset);
-				} catch (e) {
-					console.warn(
-						"HighlightOnCopy: Could not restore exact selection"
-					);
-				}
-
-				sel.removeAllRanges();
-				sel.addRange(newRange);
-			}, this.settings.duration);
-		} catch (e) {
-			console.error("HighlightOnCopy: DOM wrap failed", e);
-
-			document.documentElement.classList.add("copy-highlight-active");
-			window.setTimeout(() => {
-				document.documentElement.classList.remove(
-					"copy-highlight-active"
-				);
-			}, this.settings.duration);
 		}
 	}
 
