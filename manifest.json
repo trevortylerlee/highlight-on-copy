@@ -1,7 +1,7 @@
 {
 	"id": "highlight-on-copy",
 	"name": "Highlight On Copy",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Highlight selected text when copying it.",
 	"author": "Trevor Tyler Lee",
