@@ -14,7 +14,7 @@ interface HighlightOnCopySettings {
 }
 
 const DEFAULT_SETTINGS: HighlightOnCopySettings = {
-	backgroundColor: "rgba(0, 255, 0, 0.5)",
+	backgroundColor: "",
 	foregroundColor: "",
 	duration: 100,
 };
@@ -27,43 +27,35 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new HighlightOnCopySettingTab(this.app, this));
 		this.registerDomEvent(document, "copy", this.onCopy.bind(this));
-		this.injectStyles();
 	}
 
 	onunload() {
-		const style = document.getElementById("highlight-on-copy-styles");
-		if (style) style.remove();
+		document.documentElement.style.removeProperty("--highlight-on-copy-bg");
+		document.documentElement.style.removeProperty("--highlight-on-copy-fg");
+		document.documentElement.style.removeProperty("--highlight-on-copy-duration");
 	}
 
-	private injectStyles() {
-		const style = document.createElement("style");
-		style.id = "highlight-on-copy-styles";
-		style.textContent = `
-		:root {
-		  --hbg: transparent;
-		  --hfg: inherit;
-		  --hdur: 100ms;
+	private applyStyles() {
+		if (this.settings.backgroundColor) {
+			document.documentElement.style.setProperty(
+				"--highlight-on-copy-bg",
+				this.settings.backgroundColor,
+			);
+		} else {
+			document.documentElement.style.removeProperty("--highlight-on-copy-bg");
 		}
-  
-		.copy-highlight-active .cm-content ::selection,
-		.copy-highlight-active .markdown-preview-view ::selection {
-		  background-color: var(--hbg) !important;
-		  color:            var(--hfg) !important;
-		  transition:
-			background-color var(--hdur) ease-out,
-			color            var(--hdur) ease-out;
+		if (this.settings.foregroundColor) {
+			document.documentElement.style.setProperty(
+				"--highlight-on-copy-fg",
+				this.settings.foregroundColor,
+			);
+		} else {
+			document.documentElement.style.removeProperty("--highlight-on-copy-fg");
 		}
-  
-		.cm-editor .highlight-on-copy,
-		.cm-selectionBackground.highlight-on-copy {
-		  background-color: var(--hbg) !important;
-		  color:            var(--hfg) !important;
-		  transition:
-			background-color var(--hdur) ease-out,
-			color            var(--hdur) ease-out;
-		}
-	  `;
-		document.head.appendChild(style);
+		document.documentElement.style.setProperty(
+			"--highlight-on-copy-duration",
+			`${this.settings.duration}ms`,
+		);
 	}
 
 	async loadSettings() {
@@ -82,18 +74,7 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!view) return;
 
-		document.documentElement.style.setProperty(
-			"--hbg",
-			this.settings.backgroundColor,
-		);
-		document.documentElement.style.setProperty(
-			"--hfg",
-			this.settings.foregroundColor || "inherit",
-		);
-		document.documentElement.style.setProperty(
-			"--hdur",
-			`${this.settings.duration}ms`,
-		);
+		this.applyStyles();
 
 		if (this.highlightTimeout !== null) {
 			window.clearTimeout(this.highlightTimeout);
@@ -155,17 +136,19 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
+		containerEl.empty();
 
 		new Setting(containerEl)
 			.setName("Background color")
-			.setDesc("CSS color for the highlight background.")
+			.setDesc(
+				"CSS color for the highlight background. Leave blank to use the default.",
+			)
 			.addText((t) =>
 				t
-					.setPlaceholder(DEFAULT_SETTINGS.backgroundColor)
+					.setPlaceholder("rgba(0, 255, 0, 0.5)")
 					.setValue(this.plugin.settings.backgroundColor)
 					.onChange(async (v) => {
-						this.plugin.settings.backgroundColor =
-							v || DEFAULT_SETTINGS.backgroundColor;
+						this.plugin.settings.backgroundColor = v;
 						await this.plugin.saveSettings();
 					}),
 			);
@@ -173,7 +156,7 @@ class HighlightOnCopySettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Foreground color")
 			.setDesc(
-				"Optional CSS color for the text (leave blank to inherit).",
+				"CSS color for the text. Leave blank to inherit.",
 			)
 			.addText((t) =>
 				t

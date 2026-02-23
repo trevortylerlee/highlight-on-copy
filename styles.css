@@ -1,0 +1,23 @@
+:root {
+	--highlight-on-copy-bg: rgba(0, 255, 0, 0.5);
+	--highlight-on-copy-fg: inherit;
+	--highlight-on-copy-duration: 100ms;
+}
+
+.copy-highlight-active .cm-content ::selection,
+.copy-highlight-active .markdown-preview-view ::selection {
+	background-color: var(--highlight-on-copy-bg) !important;
+	color: var(--highlight-on-copy-fg) !important;
+	transition:
+		background-color var(--highlight-on-copy-duration) ease-out,
+		color var(--highlight-on-copy-duration) ease-out;
+}
+
+.cm-editor .highlight-on-copy,
+.cm-selectionBackground.highlight-on-copy {
+	background-color: var(--highlight-on-copy-bg) !important;
+	color: var(--highlight-on-copy-fg) !important;
+	transition:
+		background-color var(--highlight-on-copy-duration) ease-out,
+		color var(--highlight-on-copy-duration) ease-out;
+}
