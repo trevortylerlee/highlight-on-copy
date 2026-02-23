@@ -1,4 +1,4 @@
-# Highlight On Copy
+# Highlight on Copy
 
 https://github.com/user-attachments/assets/508dc15b-8626-4079-90ec-1ca6500b263a
 
