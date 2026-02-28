@@ -88,7 +88,7 @@ export default class HighlightOnCopyPlugin extends Plugin {
 		}, this.settings.duration);
 
 		if (view.getMode() === "source") {
-			const editor = view.editor as Editor;
+			const editor = view.editor;
 			if (!this.isCM6(editor)) {
 				this.handleCM5Highlight(editor);
 			}
